@@ -1,7 +1,7 @@
-package mappers;
+package com.olap.mappers;
 
 import au.com.bytecode.opencsv.CSVReader;
-import entities.Fact;
+import com.olap.entities.Fact;
 
 import java.io.FileReader;
 import java.io.IOException;

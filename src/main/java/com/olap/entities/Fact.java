@@ -1,4 +1,4 @@
-package entities;
+package com.olap.entities;
 
 import lombok.Builder;
 import lombok.Data;

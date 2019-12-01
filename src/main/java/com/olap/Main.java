@@ -1,7 +1,9 @@
-import entities.Fact;
-import mappers.JournalistsMapper;
-import mappers.PlaneCrashMapper;
-import mappers.TerroristsMapper;
+package com.olap;
+
+import com.olap.entities.Fact;
+import com.olap.mappers.JournalistsMapper;
+import com.olap.mappers.PlaneCrashMapper;
+import com.olap.mappers.TerroristsMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
