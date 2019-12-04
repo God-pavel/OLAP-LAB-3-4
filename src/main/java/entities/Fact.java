@@ -14,7 +14,7 @@ public class Fact {
 
     //Dimensions
     LocalDate date;
-    String country; //3 dimenssions
+    String country; //3 dimensions
     String city;
     String typeOfDeath;
     String airportName;

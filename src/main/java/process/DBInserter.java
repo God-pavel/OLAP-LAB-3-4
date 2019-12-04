@@ -1,5 +1,7 @@
 package process;
 
+import dao.impl.JDBCDimensionDao;
+import dao.impl.JDBCFactDao;
 import entities.Fact;
 import entities.FactDBRow;
 import mappers.DataMapper;
@@ -14,10 +16,16 @@ public class DBInserter {
     private List<DataMapper> mappers;
     private List<Fact> facts;
 
+    private JDBCFactDao jdbcFactDao;
+    private JDBCDimensionDao jdbcDimensionDao;
+
     public DBInserter(DataMapper... args) {
         mappers = new ArrayList<>();
         facts = new ArrayList<>();
         mappers.addAll(Arrays.asList(args));
+        jdbcFactDao = new JDBCFactDao();
+        jdbcDimensionDao = new JDBCDimensionDao();
+
     }
 
     public void execute() throws IOException {
@@ -30,37 +38,37 @@ public class DBInserter {
         System.out.println("DB inserting was completed!");
     }
 
-    //Значения в таблицах должны быть уникальными
     private void fillDimensionTables() {
         for (Fact fact : facts) {
-            YearRepository.save(fact.getDate().getYear());
-            MonthRepository.save(fact.getDate().getMonth());
-            DayRepository.save(fact.getDate().getDayOfMonth());
-            CityRepository.save(fact.getDate().getDayOfMonth());
-            TypeOfDeathRepository.save(fact.getTypeOfDeath());
-            AiportNameRepository.save(fact.getAirportName());
-            InjurySeverityRepository.svae(fact.getInjurySeverity());
+            jdbcDimensionDao.createYearDimension(fact.getDate().getYear());
+            jdbcDimensionDao.createMonthDimension(fact.getDate().getMonth());
+            jdbcDimensionDao.createDayDimension(fact.getDate().getDayOfMonth());
+            jdbcDimensionDao.createCityDimension(fact.getCity());
+            jdbcDimensionDao.createCountryDimension(fact.getCountry());
+            jdbcDimensionDao.createTypeOfDeathDimension(fact.getTypeOfDeath());
+            jdbcDimensionDao.createAirportNameDimension(fact.getAirportName());
+            jdbcDimensionDao.createInjurySeverityDimension(fact.getInjurySeverity());
         }
     }
 
     private void insertFact(Fact fact) {
-        FactRepository.save(FactDBRow.builder()
-                .yearID(YearRepository.getID(fact.getDate().getYear()))
-                .monthID(MonthRepository.getID(fact.getDate().getMonth()))
-                .dayID(DayRepository.getID(fact.getDate().getDayOfMonth()))
-                .countryID(CountryRepository.getID(fact.getCountry()))
-                .cityID(CityRepository.getID(fact.getCity()))
-                .typeOfDeathID(TypeOfDeathRepository.getID(fact.getTypeOfDeath()))
-                .airportNameID(AirportNameRepository.getID(fact.getAirportName()))
-                .injurySeverityID(InjurySeverityRepository.getID(fact.getInjurySeverity()))
+        jdbcFactDao.createFact(FactDBRow.builder()
+                .yearID(jdbcDimensionDao.getYearIdByValue(fact.getDate().getYear()))
+                .monthID(jdbcDimensionDao.getMonthIdByValue(fact.getDate().getMonth()))
+                .dayID(jdbcDimensionDao.getDayIdByValue(fact.getDate().getDayOfMonth()))
+                .countryID(jdbcDimensionDao.getCountryIdByValue(fact.getCountry()))
+                .cityID(jdbcDimensionDao.getCityIdByValue(fact.getCity()))
+                .typeOfDeathID(jdbcDimensionDao.getTypeOfDeathIdByValue(fact.getTypeOfDeath()))
+                .airportNameID(jdbcDimensionDao.getAirportNameIdByValue(fact.getAirportName()))
+                .injurySeverityID(jdbcDimensionDao.getInjurySeverityIdByValue(fact.getInjurySeverity()))
                 .killedByTerroristsAttack(fact.getKilledByTerroristsAttack())
                 .injuredByTerroristsAttack(fact.getInjuredByTerroristsAttack())
                 .nameOfJournalist(fact.getNameOfJournalist())
                 .nationalityOfJournalist(fact.getNationalityOfJournalist())
                 .aircraftCategory(fact.getAircraftCategory())
                 .model(fact.getModel())
-                .build()
-        );
+                .build());
+
     }
 
 }
