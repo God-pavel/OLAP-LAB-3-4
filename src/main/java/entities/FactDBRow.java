@@ -4,21 +4,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
-import java.time.LocalDate;
-
 
 @Data
 @Builder
 @ToString
-public class Fact {
+public class FactDBRow {
 
     //Dimensions
-    LocalDate date;
-    String country; //3 dimenssions
-    String city;
-    String typeOfDeath;
-    String airportName;
-    String injurySeverity;
+    long yearID;
+    long monthID;
+    long dayID;
+    long countryID;
+    long cityID;
+    long typeOfDeathID;
+    long airportNameID;
+    long injurySeverityID;
 
     //Fact fields
     long killedByTerroristsAttack;
