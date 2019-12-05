@@ -39,6 +39,7 @@ public class DBInserter {
     }
 
     private void fillDimensionTables() {
+        System.out.println(facts.size());
         for (Fact fact : facts) {
             jdbcDimensionDao.createYearDimension(fact.getDate().getYear());
             jdbcDimensionDao.createMonthDimension(fact.getDate().getMonth());

@@ -17,6 +17,7 @@ public class JournalistsMapper extends DataMapper {
     public List<Fact> putFactsFromData(List<Fact> facts) {
         String[] nextLine;
         try {
+
             while ((nextLine = reader.readNext()) != null) {
                 facts.add(Fact.builder()
                         .date(parseJournalistDate(nextLine[1]))
