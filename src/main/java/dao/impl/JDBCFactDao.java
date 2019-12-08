@@ -44,16 +44,17 @@ public class JDBCFactDao implements FactDao {
             "nationalityOfJournalist, \n" +
             "aircraftCategory, \n" +
             "model) \n" +
-            "values(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "values(?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public void createFact(FactDBRow fact) {
+
         try (Connection connection = ConnectionPoolHandler.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_FACTS)) {
-
             insertParameters(preparedStatement, fact);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
+
             e.printStackTrace();
         }
     }
@@ -89,4 +90,4 @@ public class JDBCFactDao implements FactDao {
         preparedStatement.setString(14, fact.getModel());
 
     }
-}
+

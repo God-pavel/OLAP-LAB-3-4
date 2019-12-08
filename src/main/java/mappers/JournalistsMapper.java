@@ -16,16 +16,20 @@ public class JournalistsMapper extends DataMapper {
     @Override
     public List<Fact> putFactsFromData(List<Fact> facts) {
         String[] nextLine;
+        System.out.println("-------------------Journalist--------------------");
         try {
-
             while ((nextLine = reader.readNext()) != null) {
-                facts.add(Fact.builder()
-                        .date(parseJournalistDate(nextLine[1]))
-                        .country(nextLine[4])
-                        .nameOfJournalist(nextLine[2])
-                        .nationalityOfJournalist(nextLine[6])
-                        .typeOfDeath(nextLine[13])
-                        .build());
+
+//                if (facts.size() < 200) {
+                    Fact fact = Fact.builder()
+                            .date(parseJournalistDate(nextLine[1]))
+                            .country(nextLine[4])
+                            .nameOfJournalist(nextLine[2])
+                            .nationalityOfJournalist(nextLine[6])
+                            .typeOfDeath(nextLine[13])
+                            .build();
+                    facts.add(fact);
+//                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,13 +40,10 @@ public class JournalistsMapper extends DataMapper {
     private LocalDate parseJournalistDate(String stringDate) {
         try {
             String[] partsOfDate = stringDate.split(",");
-            System.out.println(partsOfDate[0]);
             String[] monthAndDay = partsOfDate[0].split(" ");
             if (monthAndDay.length == 3) {
-                System.out.println(monthAndDay[2]);
                 return LocalDate.of(Integer.parseInt(partsOfDate[1].split(" ")[1]), Month.valueOf(monthAndDay[0].toUpperCase()), Integer.parseInt(monthAndDay[2]));
             } else {
-                System.out.println(monthAndDay[1]);
                 return LocalDate.of(Integer.parseInt(partsOfDate[1].split(" ")[1]), Month.valueOf(monthAndDay[0].toUpperCase()), Integer.parseInt(monthAndDay[1].split(" ")[0]));
             }
         } catch (Exception e) {

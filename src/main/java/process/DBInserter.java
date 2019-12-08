@@ -7,6 +7,7 @@ import entities.FactDBRow;
 import mappers.DataMapper;
 
 import java.io.IOException;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,10 +29,9 @@ public class DBInserter {
 
     }
 
-    public void execute() throws IOException {
+    public void execute() {
         System.out.println("Start parsing csv files ...");
         mappers.forEach(mapper -> mapper.putFactsFromData(facts));
-        System.out.println("Start filling dimensions tables ...");
         fillDimensionTables();
         System.out.println("Start filling  facts table ...");
         facts.forEach(this::insertFact);
@@ -39,24 +39,45 @@ public class DBInserter {
     }
 
     private void fillDimensionTables() {
-        System.out.println(facts.size());
         for (Fact fact : facts) {
-            jdbcDimensionDao.createYearDimension(fact.getDate().getYear());
-            jdbcDimensionDao.createMonthDimension(fact.getDate().getMonth());
-            jdbcDimensionDao.createDayDimension(fact.getDate().getDayOfMonth());
-            jdbcDimensionDao.createCityDimension(fact.getCity());
-            jdbcDimensionDao.createCountryDimension(fact.getCountry());
-            jdbcDimensionDao.createTypeOfDeathDimension(fact.getTypeOfDeath());
-            jdbcDimensionDao.createAirportNameDimension(fact.getAirportName());
-            jdbcDimensionDao.createInjurySeverityDimension(fact.getInjurySeverity());
+            if (fact.getDate() != null) {
+                jdbcDimensionDao.createYearDimension(fact.getDate().getYear());
+                jdbcDimensionDao.createMonthDimension(fact.getDate().getMonth());
+                jdbcDimensionDao.createDayDimension(fact.getDate().getDayOfMonth());
+            }
+            if (fact.getCity() != null) {
+                jdbcDimensionDao.createCityDimension(fact.getCity());
+            }
+            if (fact.getCountry() != null) {
+                jdbcDimensionDao.createCountryDimension(fact.getCountry());
+            }
+            if (fact.getTypeOfDeath() != null) {
+                jdbcDimensionDao.createTypeOfDeathDimension(fact.getTypeOfDeath());
+            }
+            if (fact.getAirportName() != null) {
+                jdbcDimensionDao.createAirportNameDimension(fact.getAirportName());
+            }
+            if (fact.getInjurySeverity() != null) {
+                jdbcDimensionDao.createInjurySeverityDimension(fact.getInjurySeverity());
+            }
         }
+
     }
 
     private void insertFact(Fact fact) {
+        System.out.println(fact);
+        int year = 0;
+        int day = 0;
+        Month month = null;
+        if(fact.getDate()!=null) {
+            year = fact.getDate().getYear();
+            month = fact.getDate().getMonth();
+            day = fact.getDate().getDayOfMonth();
+        }
         jdbcFactDao.createFact(FactDBRow.builder()
-                .yearID(jdbcDimensionDao.getYearIdByValue(fact.getDate().getYear()))
-                .monthID(jdbcDimensionDao.getMonthIdByValue(fact.getDate().getMonth()))
-                .dayID(jdbcDimensionDao.getDayIdByValue(fact.getDate().getDayOfMonth()))
+                .yearID(jdbcDimensionDao.getYearIdByValue(year))
+                .monthID(jdbcDimensionDao.getMonthIdByValue(month))
+                .dayID(jdbcDimensionDao.getDayIdByValue(day))
                 .countryID(jdbcDimensionDao.getCountryIdByValue(fact.getCountry()))
                 .cityID(jdbcDimensionDao.getCityIdByValue(fact.getCity()))
                 .typeOfDeathID(jdbcDimensionDao.getTypeOfDeathIdByValue(fact.getTypeOfDeath()))

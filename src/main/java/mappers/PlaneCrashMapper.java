@@ -15,17 +15,21 @@ public class PlaneCrashMapper extends DataMapper {
     @Override
     public List<Fact> putFactsFromData(List<Fact> facts) {
         String[] nextLine;
+        System.out.println("-------------------Planes--------------------");
         try {
             while ((nextLine = reader.readNext()) != null) {
-                System.out.println(nextLine[3]);
-                facts.add(Fact.builder()
-                        .date(LocalDate.parse(nextLine[3]))
-                        .country(nextLine[4])
-                        .airportName(nextLine[9])
-                        .injurySeverity(nextLine[10])
-                        .aircraftCategory(nextLine[12])
-                        .model(nextLine[15])
-                        .build());
+
+//                if (facts.size() < 300) {
+                    Fact fact =Fact.builder()
+                            .date(LocalDate.parse(nextLine[3]))
+                            .country(nextLine[4])
+                            .airportName(nextLine[9])
+                            .injurySeverity(nextLine[10])
+                            .aircraftCategory(nextLine[12])
+                            .model(nextLine[15])
+                            .build();
+                    facts.add(fact);
+//                }
             }
         } catch (IOException e) {
             e.printStackTrace();

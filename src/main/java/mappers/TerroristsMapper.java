@@ -15,15 +15,19 @@ public class TerroristsMapper extends DataMapper {
     @Override
     public List<Fact> putFactsFromData(List<Fact> facts) {
         String[] nextLine;
+        System.out.println("-------------------Terrorist--------------------");
         try {
             while ((nextLine = reader.readNext()) != null) {
-                facts.add(Fact.builder()
-                        .date(LocalDate.parse(nextLine[1]))
-                        .country(nextLine[2])
-                        .city(nextLine[3])
-                        .killedByTerroristsAttack(Long.parseLong(nextLine[4]))
-                        .injuredByTerroristsAttack(Long.parseLong(nextLine[5]))
-                        .build());
+//                if (facts.size() < 100) {
+                    Fact fact = Fact.builder()
+                            .date(LocalDate.parse(nextLine[1]))
+                            .country(nextLine[2])
+                            .city(nextLine[3])
+                            .killedByTerroristsAttack(Long.parseLong(nextLine[4]))
+                            .injuredByTerroristsAttack(Long.parseLong(nextLine[5]))
+                            .build();
+                    facts.add(fact);
+//                }
             }
         } catch (IOException e) {
             e.printStackTrace();

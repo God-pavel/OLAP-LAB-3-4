@@ -59,7 +59,6 @@ public class JDBCDimensionDao implements DimensionDao {
 
     @Override
     public void createCityDimension(String city) {
-        System.out.println(city);
         if(!checkIfExists(CITY_DIM, city)) {
             try (Connection connection = ConnectionPoolHandler.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO +
@@ -176,7 +175,7 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
@@ -192,7 +191,7 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
@@ -208,7 +207,7 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
@@ -224,23 +223,27 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
     public long getCityIdByValue(String city) {
         try (Connection connection = ConnectionPoolHandler.getConnection();
+
              PreparedStatement preparedStatement = connection.prepareStatement(ID_QUERY
                      + CITY_DIM + WHERE_VALUE + "\'" + city + "\'")) {
+
             ResultSet rs = preparedStatement.executeQuery();
+
             while(rs.next()){
+
                 return rs.getLong("ID");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
@@ -256,7 +259,7 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
@@ -272,7 +275,7 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 
     @Override
@@ -288,6 +291,6 @@ public class JDBCDimensionDao implements DimensionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 1;
     }
 }
