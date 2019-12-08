@@ -90,4 +90,4 @@ public class JDBCFactDao implements FactDao {
         preparedStatement.setString(14, fact.getModel());
 
     }
-
+}
